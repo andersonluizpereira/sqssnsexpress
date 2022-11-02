@@ -10,11 +10,11 @@ const { promisify } = require('util');
 
 AWS.config.update({ region: 'us-east-1' });
 
-const sqs = new AWS.SQS({ endpoint: 'http://localhost:4566' });
+const sqs = new AWS.SQS();
 
 sqs.receiveMessage = promisify(sqs.receiveMessage);
 
-const QueueUrl = 'http://localhost:4566/000000000000/poc-queue';
+const QueueUrl = 'poc-queue';
 
 const receiveParams = {
   QueueUrl,

@@ -3,7 +3,7 @@ const { promisify } = require('util');
 
 AWS.config.update({ region: 'us-east-1' });
 
-const sns = new AWS.SNS({ endpoint: 'http://localhost:4566' });
+const sns = new AWS.SNS();
 
 sns.publish = promisify(sns.publish);
 
