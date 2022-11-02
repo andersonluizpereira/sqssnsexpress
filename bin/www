@@ -1,0 +1,38 @@
+'use strict'
+require('dotenv').config()
+const { createTerminus } = require('@godaddy/terminus')
+const app = require('../app')
+const http = require('http')
+
+const PORT = process.env.admissionToRabbitPORT || 5000
+
+const onHealthCheck = () => {
+  return Promise.resolve('UP')
+}
+
+const onSignal = () => {
+  console.log('server is starting cleanup')
+  return Promise.resolve()
+}
+
+const onShutdown = () => {
+  console.log('cleanup finished, server is shutting down')
+  process.exit()
+}
+
+const terminusConfiguration = Object.freeze({
+  logger: console.log,
+  signal: 'SIGINT',
+  healthChecks: {
+    '/health': onHealthCheck
+  },
+  onSignal,
+  onShutdown
+})
+
+const server = http.createServer(app)
+
+server.listen(PORT)
+createTerminus(server, terminusConfiguration)
+
+console.log(`service listening on port ${PORT}...`)
